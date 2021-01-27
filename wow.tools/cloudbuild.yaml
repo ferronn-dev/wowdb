@@ -1,14 +1,9 @@
 steps:
-- name: 'docker.io/library/python:3.8'
-  id: 'build'
-  entrypoint: 'pip'
-  args: ['install', '-r', 'requirements.txt']
-  dir: 'wow.tools'
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['functions', 'deploy', 'wow-tools-dbc-publisher']
   dir: 'wow.tools'
-  waitFor: ['build']
+  waitFor: []
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['functions', 'deploy', 'wow-tools-dbc-subscriber']
   dir: 'wow.tools'
-  waitFor: ['build']
+  waitFor: []
