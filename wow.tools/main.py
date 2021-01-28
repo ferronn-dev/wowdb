@@ -62,8 +62,9 @@ def http_publish(req):
         for dbc in (dbcs - bqt)
     ]
     results = [f.result() for f in futures]
-    print('published', len(results), 'messages')
-    return 'success'
+    msg = f'published {len(results)} messages'
+    print(msg)
+    return msg
 
 def pubsub_dbc(event, ctx):
     data = json.loads(base64.b64decode(event['data']))
