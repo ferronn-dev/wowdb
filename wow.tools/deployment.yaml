@@ -13,4 +13,20 @@ resources:
       pushEndpoint: https://53021da7a1fbc4fabb5db77751df47cf-dot-ze9767a1bdf7c179fp-tp.appspot.com/_ah/push-handlers/pubsub/projects/wow-ferronn-dev/topics/wow-tools-dbc?pubsub_trigger=true
     subscription: gcf-wow-tools-dbc-subscriber-us-central1-wow-tools-dbc
     topic: projects/wow-ferronn-dev/topics/wow-tools-dbc
-
+- name: wow-tools-dbc-publisher
+  type: gcp-types/cloudfunctions-v1:projects.locations.functions
+  properties:
+    availableMemoryMb: 256
+    entryPoint: http_publish
+    function: wow-tools-dbc-publisher
+    httpsTrigger:
+      securityLevel: SECURE_OPTIONAL
+      url: https://us-central1-wow-ferronn-dev.cloudfunctions.net/wow-tools-dbc-publisher
+    ingressSettings: ALLOW_ALL
+    name: projects/wow-ferronn-dev/locations/us-central1/functions/wow-tools-dbc-publisher
+    parent: projects/wow-ferronn-dev/locations/us-central1
+    runtime: python38
+    serviceAccountEmail: wow-ferronn-dev@appspot.gserviceaccount.com
+    sourceRepository:
+      url: https://source.developers.google.com/projects/wow-ferronn-dev/repos/github_ferronn-dev_wowdb/moveable-aliases/main/paths/wow.tools
+    timeout: 60s
