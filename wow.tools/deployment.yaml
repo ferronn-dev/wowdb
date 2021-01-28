@@ -51,3 +51,16 @@ resources:
     sourceRepository:
       url: https://source.developers.google.com/projects/wow-ferronn-dev/repos/github_ferronn-dev_wowdb/moveable-aliases/main/paths/wow.tools
     timeout: 60s
+- name: wow-tools-dbc-poller
+  type: gcp-types/cloudscheduler-v1:projects.locations.jobs
+  properties:
+    attemptDeadline: 180s
+    httpTarget:
+      headers:
+        User-Agent: Google-Cloud-Scheduler
+      httpMethod: POST
+      uri: https://us-central1-wow-ferronn-dev.cloudfunctions.net/wow-tools-dbc-publisher
+    parent: projects/wow-ferronn-dev/locations/us-central1
+    schedule: '17 */6 * * *'
+    state: ENABLED
+    timeZone: Europe/London
