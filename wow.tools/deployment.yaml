@@ -75,7 +75,7 @@ resources:
           'deployments',
           'update',
           'deploy-wow-tools-dbc',
-          '--config=wow.tools/deployment.yaml']
+          '--config=deployment.yaml']
     includedFiles:
     - wow.tools/**
     name: wow-tools-build-trigger
