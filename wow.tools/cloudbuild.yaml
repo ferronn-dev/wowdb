@@ -1,9 +1,9 @@
 steps:
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['functions', 'deploy', 'wow-tools-dbc-publisher']
+  args: [
+    'deployment-manager',
+    'deployments',
+    'update',
+    'deploy-wow-tools-dbc',
+    '--config=deployment.yaml']
   dir: 'wow.tools'
-  waitFor: []
-- name: 'gcr.io/cloud-builders/gcloud'
-  args: ['functions', 'deploy', 'wow-tools-dbc-subscriber']
-  dir: 'wow.tools'
-  waitFor: []
