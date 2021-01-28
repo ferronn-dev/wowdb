@@ -62,5 +62,4 @@ resources:
       uri: https://us-central1-wow-ferronn-dev.cloudfunctions.net/wow-tools-dbc-publisher
     parent: projects/wow-ferronn-dev/locations/us-central1
     schedule: '17 */6 * * *'
-    state: ENABLED
     timeZone: Europe/London
