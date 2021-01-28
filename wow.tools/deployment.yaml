@@ -1,0 +1,16 @@
+resources:
+- name: wow-tools-dbc-topic
+  type: gcp-types/pubsub-v1:projects.topics
+  properties:
+    topic: wow-tools-dbc
+- name: wow-tools-dbc-push-subscription
+  type: gcp-types/pubsub-v1:projects.subscriptions
+  properties:
+    ackDeadlineSeconds: 600
+    expirationPolicy: {}
+    messageRetentionDuration: 604800s
+    pushConfig:
+      pushEndpoint: https://53021da7a1fbc4fabb5db77751df47cf-dot-ze9767a1bdf7c179fp-tp.appspot.com/_ah/push-handlers/pubsub/projects/wow-ferronn-dev/topics/wow-tools-dbc?pubsub_trigger=true
+    subscription: gcf-wow-tools-dbc-subscriber-us-central1-wow-tools-dbc
+    topic: projects/wow-ferronn-dev/topics/wow-tools-dbc
+
