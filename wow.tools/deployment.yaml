@@ -64,14 +64,13 @@ resources:
     parent: projects/wow-ferronn-dev/locations/us-central1
     schedule: '17 */6 * * *'
     timeZone: Europe/London
-- name: wowdb-wow-tools
+- name: wow-tools-build-trigger
   type: gcp-types/cloudbuild-v1:projects.triggers
   properties:
     filename: wow.tools/cloudbuild.yaml
-    github:
-      name: wowdb
-      owner: ferronn-dev
-      push:
-        branch: ^main$
     includedFiles:
     - wow.tools/**
+    triggerTemplate:
+      branchName: ^main$
+      dir: wow.tools
+      repoName: github_ferronn-dev_wowdb
