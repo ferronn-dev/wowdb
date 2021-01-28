@@ -67,9 +67,19 @@ resources:
 - name: wow-tools-build-trigger
   type: gcp-types/cloudbuild-v1:projects.triggers
   properties:
-    filename: wow.tools/cloudbuild.yaml
+    build:
+      steps:
+      - name: 'gcr.io/cloud-builders/gcloud'
+        args: [
+          'deployment-manager',
+          'deployments',
+          'update',
+          'deploy-wow-tools-dbc',
+          '--config=deployment.yaml']
+        dir: 'wow.tools'
     includedFiles:
     - wow.tools/**
+    name: wow-tools-build-trigger
     triggerTemplate:
       branchName: ^main$
       dir: wow.tools
