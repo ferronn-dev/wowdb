@@ -21,7 +21,6 @@ resources:
     function: wow-tools-dbc-publisher
     httpsTrigger:
       securityLevel: SECURE_OPTIONAL
-      url: https://us-central1-wow-ferronn-dev.cloudfunctions.net/wow-tools-dbc-publisher
     ingressSettings: ALLOW_ALL
     name: projects/wow-ferronn-dev/locations/us-central1/functions/wow-tools-dbc-publisher
     parent: projects/wow-ferronn-dev/locations/us-central1
@@ -59,6 +58,8 @@ resources:
       headers:
         User-Agent: Google-Cloud-Scheduler
       httpMethod: POST
+      oidcToken:
+        serviceAccountEmail: wow-ferronn-dev@appspot.gserviceaccount.com
       uri: https://us-central1-wow-ferronn-dev.cloudfunctions.net/wow-tools-dbc-publisher
     parent: projects/wow-ferronn-dev/locations/us-central1
     schedule: '17 */6 * * *'
