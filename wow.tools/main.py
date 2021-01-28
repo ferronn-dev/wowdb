@@ -7,6 +7,9 @@ from google.cloud import bigquery
 from google.cloud import pubsub_v1
 from google.cloud import storage
 
+print('connecting to bigquery...')
+bq = bigquery.Client('wow-ferronn-dev')
+
 def latest_classic_version():
     data = requests.get('https://wow.tools/dbc/')
     data.raise_for_status()
@@ -40,17 +43,14 @@ def pull_db(build):
     data.raise_for_status()
     return data.json()
 
-def connect_to_bq(v):
-    print('connecting to bigquery...')
-    bq = bigquery.Client('wow-ferronn-dev')
-    ds = bq.create_dataset('wow-ferronn-dev.wow_tools_dbc_' + v.replace('.', '_'), exists_ok=True)
-    return bq, ds
+def get_dataset(v):
+    return bq.create_dataset('wow-ferronn-dev.wow_tools_dbc_' + v.replace('.', '_'), exists_ok=True)
 
 def http_publish(req):
     print('fetching classic version...')
     v = latest_classic_version()
     print('using classic version', v)
-    bq, ds = connect_to_bq(v)
+    ds = get_dataset(v)
     print('getting wow.tools table list...')
     dbcs = set(e['name'] for e in pull_db(v))
     print('listing bigquery tables...')
@@ -89,7 +89,7 @@ def pubsub_dbc(event, ctx):
     ]
     pprint.pprint(schema)
     print('creating bq table...')
-    bq, ds = connect_to_bq(v)
+    ds = get_dataset(v)
     job = bq.load_table_from_uri(
         f'gs://wow.ferronn.dev/wow.tools/dbc/{v}/{dbc}.csv',
         ds.table(dbc),
