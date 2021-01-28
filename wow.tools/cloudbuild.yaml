@@ -1,0 +1,9 @@
+steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['--project=wow-ferronn-dev', 'functions', 'deploy', 'wow-tools-dbc-publisher']
+  dir: 'wow.tools'
+  waitFor: ['-']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['--project=wow-ferronn-dev', 'functions', 'deploy', 'wow-tools-dbc-subscriber']
+  dir: 'wow.tools'
+  waitFor: ['-']
