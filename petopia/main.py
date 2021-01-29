@@ -85,5 +85,5 @@ def scrape(_):
                 autodetect=True,
                 source_format=bigquery.SourceFormat.NEWLINE_DELIMITED_JSON))
     jobs = [submit_bq_job(name, db) for name, db in flatten(parse(soup)).items()]
-    for job in jobs:
-        job.result()
+    results = [job.result() for job in jobs]
+    return f'imported {len(results)} tables'
