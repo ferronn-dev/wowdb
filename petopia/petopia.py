@@ -87,5 +87,3 @@ def scrape(_):
     jobs = [submit_bq_job(name, db) for name, db in flatten(parse(soup)).items()]
     for job in jobs:
         job.result()
-
-scrape(None)
