@@ -1,3 +1,4 @@
+resources:
 - name: petopia
   type: gcp-types/cloudfunctions-v1:projects.locations.functions
   properties:
