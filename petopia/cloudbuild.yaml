@@ -1,5 +1,10 @@
 steps:
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['--project=wow-ferronn-dev', 'functions', 'deploy', 'petopia']
+  args:
+  - '--project=wow-ferronn-dev'
+  - 'functions'
+  - 'deploy'
+  - 'petopia'
+  - '--source=https://source.developers.google.com/projects/wow-ferronn-dev/repos/github_ferronn-dev_wowdb/moveable-aliases/main/paths/petopia'
   dir: 'petopia'
   waitFor: ['-']
