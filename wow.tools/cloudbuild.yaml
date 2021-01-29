@@ -1,9 +1,19 @@
 steps:
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['--project=wow-ferronn-dev', 'functions', 'deploy', 'wow-tools-dbc-publisher']
+  args:
+  - '--project=wow-ferronn-dev'
+  - 'functions'
+  - 'deploy'
+  - 'wow-tools-dbc-publisher'
+  - '--source=https://source.developers.google.com/projects/wow-ferronn-dev/repos/github_ferronn-dev_wowdb/moveable-aliases/main/paths/wow.tools'
   dir: 'wow.tools'
   waitFor: ['-']
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['--project=wow-ferronn-dev', 'functions', 'deploy', 'wow-tools-dbc-subscriber']
+  args:
+  - '--project=wow-ferronn-dev'
+  - 'functions'
+  - 'deploy'
+  - 'wow-tools-dbc-subscriber'
+  - '--source=https://source.developers.google.com/projects/wow-ferronn-dev/repos/github_ferronn-dev_wowdb/moveable-aliases/main/paths/wow.tools'
   dir: 'wow.tools'
   waitFor: ['-']
