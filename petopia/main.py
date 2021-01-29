@@ -82,6 +82,7 @@ def scrape(_):
             destination=dataset.table(name),
             job_config=bigquery.LoadJobConfig(
                 autodetect=True,
-                source_format=bigquery.SourceFormat.NEWLINE_DELIMITED_JSON))
+                source_format=bigquery.SourceFormat.NEWLINE_DELIMITED_JSON,
+                write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE))
         job.result()
     return f'finished petopia scrape'
