@@ -12,6 +12,8 @@ resources:
     parent: projects/wow-ferronn-dev/locations/us-central1
     runtime: python38
     serviceAccountEmail: wow-ferronn-dev@appspot.gserviceaccount.com
+    sourceRepository:
+      url: https://source.developers.google.com/projects/wow-ferronn-dev/repos/github_ferronn-dev_wowdb/moveable-aliases/main/paths/petopia
     timeout: 60s
 - name: petopia-poller
   type: gcp-types/cloudscheduler-v1:projects.locations.jobs
@@ -31,11 +33,10 @@ resources:
   type: gcp-types/cloudbuild-v1:projects.triggers
   properties:
     filename: petopia/cloudbuild.yaml
-    github:
-      name: wowdb
-      owner: ferronn-dev
-      push:
-        branch: ^main$
     includedFiles:
     - petopia/**
     name: petopia-build-trigger
+    triggerTemplate:
+      branchName: ^main$
+      dir: petopia
+      repoName: github_ferronn-dev_wowdb
