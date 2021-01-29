@@ -1,5 +1,5 @@
 steps:
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['--project=wow-ferronn-dev', 'functions', 'deploy', 'petopia']
-  dir: 'wow.tools'
+  dir: 'petopia'
   waitFor: ['-']
