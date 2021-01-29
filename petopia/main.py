@@ -74,16 +74,14 @@ def scrape(_):
     bigquery_client = bigquery.Client('wow-ferronn-dev')
     dataset = bigquery_client.create_dataset('wow-ferronn-dev.petopia', exists_ok=True)
     bucket = storage.Client().bucket('wow.ferronn.dev')
-    def submit_bq_job(name, db):
+    for name, db in flatten(parse(soup)).items():
         ndjson = '\n'.join([json.dumps(record) for record in db])
-        blob = bucket.blob(f'petopia/{name}.json')
-        blob.upload_from_string(ndjson)
-        return bigquery_client.load_table_from_uri(
+        bucket.blob(f'petopia/{name}.json').upload_from_string(ndjson)
+        job = bigquery_client.load_table_from_uri(
             source_uris=f'gs://wow.ferronn.dev/petopia/{name}.json',
             destination=dataset.table(name),
             job_config=bigquery.LoadJobConfig(
                 autodetect=True,
                 source_format=bigquery.SourceFormat.NEWLINE_DELIMITED_JSON))
-    jobs = [submit_bq_job(name, db) for name, db in flatten(parse(soup)).items()]
-    results = [job.result() for job in jobs]
-    return f'imported {len(results)} tables, hooray'
+        job.result()
+    return f'finished petopia scrape'
