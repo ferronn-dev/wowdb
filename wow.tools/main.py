@@ -5,7 +5,6 @@ import requests
 from google.cloud import pubsub_v1
 from google.cloud import storage
 
-print('connecting to bigquery...')
 storage_client = storage.Client()
 bucket = storage_client.bucket('wowdb-import-stage')
 ps = pubsub_v1.PublisherClient()
@@ -53,13 +52,14 @@ def pubsub_dbc(event, _):
         print('blob already exists')
         return
     print('fetching schema...')
-    b.metadata['schema'] = json.dumps([
-        header.replace('[', '_').replace(']', '_').lower()
-        for header in fetch(
-            f'https://wow.tools/dbc/api/header/{dbc}/',
-            {'build': v},
-        ).json()['headers']
-    ])
+    b.metadata = {
+        'headers': json.dumps([
+            header.replace('[', '_').replace(']', '_').lower()
+            for header in fetch(
+                f'https://wow.tools/dbc/api/header/{dbc}/',
+                {'build': v},
+            ).json()['headers']]),
+    }
     print('fetching csv...')
     csv = fetch('https://wow.tools/dbc/api/export/', {
         'name': dbc,
