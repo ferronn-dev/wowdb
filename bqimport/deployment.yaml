@@ -1,0 +1,28 @@
+resources:
+- name: bqimport
+  type: gcp-types/cloudfunctions-v1:projects.locations.functions
+  properties:
+    availableMemoryMb: 256
+    entryPoint: bqimport
+    function: bqimport
+    httpsTrigger:
+      securityLevel: SECURE_OPTIONAL
+    ingressSettings: ALLOW_ALL
+    name: projects/wow-ferronn-dev/locations/us-central1/functions/bqimport
+    parent: projects/wow-ferronn-dev/locations/us-central1
+    runtime: python38
+    serviceAccountEmail: wow-ferronn-dev@appspot.gserviceaccount.com
+    sourceRepository:
+      url: https://source.developers.google.com/projects/wow-ferronn-dev/repos/github_ferronn-dev_wowdb/moveable-aliases/main/paths/bqimport
+    timeout: 60s
+- name: bqimport-build-trigger
+  type: gcp-types/cloudbuild-v1:projects.triggers
+  properties:
+    filename: bqimport/cloudbuild.yaml
+    includedFiles:
+    - bqimport/**
+    name: bqimport-build-trigger
+    triggerTemplate:
+      branchName: ^main$
+      dir: bqimport
+      repoName: github_ferronn-dev_wowdb
