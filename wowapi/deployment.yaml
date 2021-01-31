@@ -3,8 +3,8 @@ resources:
   type: gcp-types/cloudfunctions-v1:projects.locations.functions
   properties:
     availableMemoryMb: 256
-    entryPoint: wowapi
-    function: scrape
+    entryPoint: scrape
+    function: wowapi
     httpsTrigger:
       securityLevel: SECURE_OPTIONAL
     ingressSettings: ALLOW_ALL
