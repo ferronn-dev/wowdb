@@ -1,0 +1,10 @@
+steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - '--project=wow-ferronn-dev'
+  - 'functions'
+  - 'deploy'
+  - 'wowapi'
+  - '--source=https://source.developers.google.com/projects/wow-ferronn-dev/repos/github_ferronn-dev_wowdb/moveable-aliases/main/paths/wowapi'
+  dir: 'wowapi'
+  waitFor: ['-']
