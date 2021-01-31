@@ -4,6 +4,7 @@ import requests
 import requests_oauthlib
 import time
 from google.cloud import secretmanager
+from google.cloud import storage
 
 secret_client = secretmanager.SecretManagerServiceClient()
 [client_id, client_secret] = [
@@ -55,9 +56,9 @@ def scrape(_):
         }.items()
     }
     print('retrieved data')
-    for name, values in data.items():
-        with open(f'{name}.json', 'w') as f:
-            f.write('\n'.join([json.dumps(v) for v in values]))
-            print(f'wrote {name}.json')
-    print('all done')
+    bucket = storage.Client().bucket('wowdb-import-stage')
+    for name, db in data.items():
+        ndjson = '\n'.join([json.dumps(record) for record in db])
+        bucket.blob(f'wowapi/{name}.json').upload_from_string(ndjson)
+        print(f'wrote {name}')
     return 'success'
