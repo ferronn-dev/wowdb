@@ -1,8 +1,6 @@
 import bs4
 import json
-import pprint
 import requests
-from google.cloud import bigquery
 from google.cloud import storage
 
 def parse(soup):
@@ -71,18 +69,8 @@ def scrape(_):
     data = requests.get('https://www.wow-petopia.com/classic/abilities.php')
     data.raise_for_status()
     soup = bs4.BeautifulSoup(data.text, 'html.parser')
-    bigquery_client = bigquery.Client('wow-ferronn-dev')
-    dataset = bigquery_client.create_dataset('wow-ferronn-dev.petopia', exists_ok=True)
-    bucket = storage.Client().bucket('wow.ferronn.dev')
+    bucket = storage.Client().bucket('wowdb-import-stage')
     for name, db in flatten(parse(soup)).items():
         ndjson = '\n'.join([json.dumps(record) for record in db])
         bucket.blob(f'petopia/{name}.json').upload_from_string(ndjson)
-        job = bigquery_client.load_table_from_uri(
-            source_uris=f'gs://wow.ferronn.dev/petopia/{name}.json',
-            destination=dataset.table(name),
-            job_config=bigquery.LoadJobConfig(
-                autodetect=True,
-                source_format=bigquery.SourceFormat.NEWLINE_DELIMITED_JSON,
-                write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE))
-        job.result()
-    return f'finished petopia scrape'
+    return 'finished petopia scrape'
