@@ -6,7 +6,8 @@ resources:
     entryPoint: bqimport
     eventTrigger:
       eventType: google.storage.object.finalize
-      failurePolicy: {}
+      failurePolicy:
+        retry: {}
       resource: projects/_/buckets/wowdb-import-stage
       service: storage.googleapis.com
     function: bqimport
