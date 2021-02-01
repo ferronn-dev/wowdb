@@ -4,9 +4,12 @@ resources:
   properties:
     availableMemoryMb: 256
     entryPoint: bqimport
+    eventTrigger:
+      eventType: google.storage.object.finalize
+      failurePolicy: {}
+      resource: projects/_/buckets/wowdb-import-stage
+      service: storage.googleapis.com
     function: bqimport
-    httpsTrigger:
-      securityLevel: SECURE_OPTIONAL
     ingressSettings: ALLOW_ALL
     name: projects/wow-ferronn-dev/locations/us-central1/functions/bqimport
     parent: projects/wow-ferronn-dev/locations/us-central1
