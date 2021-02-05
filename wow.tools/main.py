@@ -5,6 +5,11 @@ import requests
 from google.cloud import pubsub_v1
 from google.cloud import storage
 
+LOCALES = [
+    'deDE', 'enGB', 'esES', 'esMX', 'frFR', 'itIT',
+    'koKR', 'ptBR', 'ptPT', 'ruRU', 'zhCN', 'zhTW',
+]
+
 storage_client = storage.Client()
 bucket = storage_client.bucket('wowdb-import-stage')
 ps = pubsub_v1.PublisherClient()
@@ -33,8 +38,11 @@ def http_publish(_):
         for e in fetch(f'https://api.wow.tools/databases/{v}').json())
     topic = ps.topic_path('wow-ferronn-dev', 'wow-tools-dbc')
     futures = [
-        ps.publish(topic, json.dumps({'v': v, 'dbc': dbc}).encode('ascii'))
+        ps.publish(topic, json.dumps({
+            'v': v, 'dbc': dbc, 'loc': loc,
+        }).encode('ascii'))
         for dbc in dbcs
+        for loc in LOCALES
     ]
     results = [f.result() for f in futures]
     msg = f'published {len(results)} messages'
@@ -43,11 +51,11 @@ def http_publish(_):
 
 def pubsub_dbc(event, _):
     data = json.loads(base64.b64decode(event['data']))
-    v = data['v']
-    dbc = data['dbc']
+    [v, dbc, loc] = [data[k] for k in ['v', 'dbc', 'loc']]
     print('using classic version', v)
     print('working on', dbc)
-    b = bucket.blob('wow_tools_dbc_' + v.replace('.', '_') + f'/{dbc}.csv')
+    print('for locale', loc)
+    b = bucket.blob(f'wow_tools_dbc_{v.replace(".", "_")}_{loc}/{dbc}.csv')
     if b.exists():
         print('blob already exists')
         return
@@ -64,7 +72,7 @@ def pubsub_dbc(event, _):
     csv = fetch('https://wow.tools/dbc/api/export/', {
         'name': dbc,
         'build': v,
-        'locale': 'enUS',
+        'locale': loc,
     }).text
     print('uploading csv...')
     b.upload_from_string(csv)
