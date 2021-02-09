@@ -6,7 +6,7 @@ from google.cloud import pubsub_v1
 from google.cloud import storage
 
 LOCALES = [
-    'deDE', 'enGB', 'esES', 'esMX', 'frFR', 'itIT',
+    'deDE', 'enGB', 'enUS', 'esES', 'esMX', 'frFR', 'itIT',
     'koKR', 'ptBR', 'ptPT', 'ruRU', 'zhCN', 'zhTW',
 ]
 
