@@ -83,7 +83,7 @@ def data():
 
 def scrape(_):
     bucket = storage.Client().bucket('wowdb-import-stage')
-    for name, db in data.items():
+    for name, db in data().items():
         ndjson = '\n'.join([json.dumps(record) for record in db])
         bucket.blob(f'petopia/{name}.json').upload_from_string(ndjson)
     return 'finished petopia scrape'
