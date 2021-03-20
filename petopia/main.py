@@ -3,6 +3,12 @@ import json
 import requests
 from google.cloud import storage
 
+def removesuffix(string, suffix):
+    return string[:-len(suffix)] if string.endswith(suffix) else string
+
+def parse_zone(zone):
+    return removesuffix(removesuffix(zone, ' (Dungeon)'), ' (Raid)')
+
 def parse(soup):
     return [{
         'name': ability.find_previous_sibling('h3').text,
@@ -24,7 +30,7 @@ def parse(soup):
                         'npc': int(npc.a['href'].split('=')[-1]),
                         'minlevel': int(lvls[0]),
                         'maxlevel': int(lvls[-1]),
-                        'zone': parts[2][:-1],
+                        'zones': [parse_zone(z) for z in parts[2][:-1].split('; ')],
                     })())()
                     for npc in rank.parent.find_all(class_='abilityranknpc classic')
                 ],
@@ -57,20 +63,27 @@ def flatten(abilities):
             {
                 'ability': ability['name'],
                 'rank': rank['rank'],
-                **trainer,
+                'npc': trainer['npc'],
+                'minlevel': trainer['minlevel'],
+                'maxlevel': trainer['maxlevel'],
+                'zone': zone,
             }
             for ability in abilities
             for rank in ability['ranks']
             for trainer in rank['trainers']
+            for zone in trainer['zones']
         ],
     }
 
-def scrape(_):
+def data():
     data = requests.get('https://www.wow-petopia.com/classic/abilities.php')
     data.raise_for_status()
     soup = bs4.BeautifulSoup(data.text, 'html.parser')
+    return flatten(parse(soup))
+
+def scrape(_):
     bucket = storage.Client().bucket('wowdb-import-stage')
-    for name, db in flatten(parse(soup)).items():
+    for name, db in data.items():
         ndjson = '\n'.join([json.dumps(record) for record in db])
         bucket.blob(f'petopia/{name}.json').upload_from_string(ndjson)
     return 'finished petopia scrape'
