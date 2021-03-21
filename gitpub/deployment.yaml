@@ -12,6 +12,7 @@ resources:
       resource: projects/wow-ferronn-dev/topics/gitpub
       service: pubsub.googleapis.com
     ingressSettings: ALLOW_ALL
+    maxInstances: 1
     name: projects/wow-ferronn-dev/locations/us-central1/functions/gitpub
     parent: projects/wow-ferronn-dev/locations/us-central1
     runtime: python38
