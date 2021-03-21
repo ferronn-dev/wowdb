@@ -18,7 +18,7 @@ def publish(event, _):
     print(f'publishing to {repo}')
     req = requests.post(
         f'{root}/{user}/{repo}/actions/workflows/{workflow}/dispatches',
-        headers={'Authorization': f'token {secret}'},
+        auth=(user, secret),
         data={'ref':'main'})
     req.raise_for_status()
     print(f'published to {repo}')
