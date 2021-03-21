@@ -19,6 +19,20 @@ resources:
     sourceRepository:
       url: https://source.developers.google.com/projects/wow-ferronn-dev/repos/github_ferronn-dev_wowdb/moveable-aliases/main/paths/bqpub
     timeout: 60s
+- name: bqpub-poller
+  type: gcp-types/cloudscheduler-v1:projects.locations.jobs
+  properties:
+    attemptDeadline: 180s
+    httpTarget:
+      headers:
+        User-Agent: Google-Cloud-Scheduler
+      httpMethod: POST
+      oidcToken:
+        serviceAccountEmail: wow-ferronn-dev@appspot.gserviceaccount.com
+      uri: https://us-central1-wow-ferronn-dev.cloudfunctions.net/bqpub
+    parent: projects/wow-ferronn-dev/locations/us-central1
+    schedule: '*/10 * * * *'
+    timeZone: Europe/London
 - name: bqpub-build-trigger
   type: gcp-types/cloudbuild-v1:projects.triggers
   properties:
