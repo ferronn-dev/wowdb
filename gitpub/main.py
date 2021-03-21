@@ -1,3 +1,5 @@
+import base64
+import json
 import requests
 from google.cloud import secretmanager
 
@@ -8,10 +10,11 @@ secret = secret_client.access_secret_version(request={
 print('retrieved secret')
 
 def publish(event, _):
+    data = json.loads(base64.b64decode(event['data']))
     root = 'https://api.github.com/repos'
     user = 'ferronn-dev'
-    repo = event['repo']
-    workflow = event['workflow']
+    repo = data['repo']
+    workflow = data['workflow']
     print(f'publishing to {repo}')
     req = requests.post(
         f'{root}/{user}/{repo}/actions/workflows/{workflow}/dispatches',
