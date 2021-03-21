@@ -1,0 +1,28 @@
+resources:
+- name: bqpub
+  type: gcp-types/cloudfunctions-v1:projects.locations.functions
+  properties:
+    availableMemoryMb: 256
+    entryPoint: poll
+    function: bqpub
+    httpsTrigger:
+      securityLevel: SECURE_OPTIONAL
+    ingressSettings: ALLOW_ALL
+    name: projects/wow-ferronn-dev/locations/us-central1/functions/bqpub
+    parent: projects/wow-ferronn-dev/locations/us-central1
+    runtime: python38
+    serviceAccountEmail: wow-ferronn-dev@appspot.gserviceaccount.com
+    sourceRepository:
+      url: https://source.developers.google.com/projects/wow-ferronn-dev/repos/github_ferronn-dev_wowdb/moveable-aliases/main/paths/bqpub
+    timeout: 60s
+- name: bqpub-build-trigger
+  type: gcp-types/cloudbuild-v1:projects.triggers
+  properties:
+    filename: bqpub/cloudbuild.yaml
+    includedFiles:
+    - bqpub/**
+    name: bqpub-build-trigger
+    triggerTemplate:
+      branchName: ^main$
+      dir: bqpub
+      repoName: github_ferronn-dev_wowdb
