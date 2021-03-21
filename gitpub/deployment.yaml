@@ -5,8 +5,12 @@ resources:
     availableMemoryMb: 256
     entryPoint: publish
     function: gitpub
-    httpsTrigger:
-      securityLevel: SECURE_OPTIONAL
+    eventTrigger:
+      eventType: google.pubsub.topic.publish
+      failurePolicy:
+        retry: {}
+      resource: projects/wow-ferronn-dev/topics/gitpub
+      service: pubsub.googleapis.com
     ingressSettings: ALLOW_ALL
     name: projects/wow-ferronn-dev/locations/us-central1/functions/gitpub
     parent: projects/wow-ferronn-dev/locations/us-central1
