@@ -26,7 +26,7 @@ def poll(_):
         all_users=True,
         state_filter='done',
         min_creation_time=datetime.utcnow() - timedelta(minutes=10))
-    if not any([job.job_type == 'load' for job in jobs]):
+    if not any([getattr(job, 'job_type', '') == 'load' for job in jobs]):
         return done('no loads to report')
     futures = [
         pubsub_client.publish(
