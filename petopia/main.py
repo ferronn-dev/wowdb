@@ -75,15 +75,21 @@ def flatten(abilities):
         ],
     }
 
-def data():
-    data = requests.get('https://www.wow-petopia.com/classic/abilities.php')
+versions = [
+    ('classic', ''),
+    ('classic_bc', '_bc'),
+]
+
+def data(path):
+    data = requests.get(f'https://www.wow-petopia.com/{path}/abilities.php')
     data.raise_for_status()
     soup = bs4.BeautifulSoup(data.text, 'html.parser')
     return flatten(parse(soup))
 
 def scrape(_):
     bucket = storage.Client().bucket('wowdb-import-stage')
-    for name, db in data().items():
-        ndjson = '\n'.join([json.dumps(record) for record in db])
-        bucket.blob(f'petopia/{name}.json').upload_from_string(ndjson)
+    for path, suffix in versions:
+        for name, db in data(path).items():
+            ndjson = '\n'.join([json.dumps(record) for record in db])
+            bucket.blob(f'petopia{suffix}/{name}.json').upload_from_string(ndjson)
     return 'finished petopia scrape'
