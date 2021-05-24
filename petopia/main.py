@@ -24,6 +24,7 @@ def parse(soup):
                 'rank': int(rank.text.rpartition(' ')[-1]),
                 'petlevel': int(info[3][:-1]),
                 'cost': int(info[5]),
+                'purchasable': bool(rank.parent.find_all(string='Can be learned from trainers.')),
                 'trainers': [
                     (lambda parts=npc.text.split(', '):
                     (lambda lvls=parts[1].split('-'): {
@@ -55,6 +56,7 @@ def flatten(abilities):
                 'rank': rank['rank'],
                 'petlevel': rank['petlevel'],
                 'cost': rank['cost'],
+                'purchasable': rank['purchasable'],
             }
             for ability in abilities
             for rank in ability['ranks']
