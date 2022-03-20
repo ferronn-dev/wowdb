@@ -1,0 +1,18 @@
+apiVersion: skaffold/v2beta28
+kind: Config
+build:
+  artifacts:
+    - image: petopia
+      context: petopia
+      buildpacks:
+        builder: gcr.io/buildpacks/builder:v1
+        env:
+        - GOOGLE_FUNCTION_SIGNATURE_TYPE=http
+        - GOOGLE_FUNCTION_TARGET=scrape
+    - image: wowapi
+      context: wowapi
+      buildpacks:
+        builder: gcr.io/buildpacks/builder:v1
+        env:
+        - GOOGLE_FUNCTION_SIGNATURE_TYPE=http
+        - GOOGLE_FUNCTION_TARGET=scrape
